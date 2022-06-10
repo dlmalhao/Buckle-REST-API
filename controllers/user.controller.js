@@ -1,5 +1,6 @@
 const db = require("../models/index.js");
 const User = db.user;
+const course = db.course
 const bcrypt = require("bcryptjs");
 
 //necessary for LIKE operator
@@ -29,6 +30,7 @@ const getPagingData = (data, page, limit) => {
     return { totalItems, users, totalPages, currentPage };
 };
 
+// Display list of all users (with pagination)
 // Display list of all users (with pagination)
 exports.findAll = async (req, res) => {
     //get data from request query string (if not existing, they will be undefined)
@@ -60,8 +62,12 @@ exports.findAll = async (req, res) => {
     const condition = nome ? { nome: { [Op.like]: `%${nome}%` } } : null;
 
     try {
-        let users = await User.findAndCountAll({ where: condition, limit, offset })
-        console.log(users);
+        let users = await User.findAndCountAll({ where: condition, limit, offset,
+            include: [
+                {
+                    model: course, attributes: ["id", "descricao_curso"]
+                }] });
+
         // map default response to desired response data structure
         res.status(200).json({
             success: true,

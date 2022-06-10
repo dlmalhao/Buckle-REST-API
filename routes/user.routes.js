@@ -19,7 +19,7 @@ router.use((req, res, next) => {
 })
 
 router.route('/')
-    .get(authController.verifyToken, userController.findAll)
+    .get(/*authController.verifyToken, */userController.findAll)
     .post(authController.verifyToken, userController.create);
 
 router.route('/:userID')

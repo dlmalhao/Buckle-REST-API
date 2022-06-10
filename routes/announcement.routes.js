@@ -1,6 +1,7 @@
 const express = require('express');
 
-const annoucementController = require("../controllers/annoucement.controller");
+const announcementController = require("../controllers/announcement.controller");
+const authController = require("../controllers/auth.controller");
 
 // express router
 let router = express.Router();
@@ -17,13 +18,13 @@ router.use((req, res, next) => {
 })
 
 router.route('/')
-    .get(annoucementController.findAll)
-    .post(annoucementController.create);
+    .get(announcementController.findAll)
+    .post(authController.verifyToken, announcementController.create);
 
-router.route('/:annoucementID')
-    .get(annoucementController.findOne)
-    .put(annoucementController.update)
-    .delete(annoucementController.delete);
+router.route('/:announcementID')
+    .get(announcementController.findOne)
+    .put(announcementController.update)
+    .delete(announcementController.delete);
 
 router.all('*', function (req, res) {
     //send an predefined error message 

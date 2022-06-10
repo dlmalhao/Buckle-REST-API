@@ -38,8 +38,8 @@ db.user = require("./user.model.js")(sequelize, DataTypes);
 
 //export Project model
 db.project = require("./project.model.js")(sequelize, DataTypes);
-//export Annoucement model
-db.annoucement = require("./annoucement.model.js")(sequelize, DataTypes);
+//export announcement model
+db.announcement = require("./announcement.model")(sequelize, DataTypes);
 //export Comment model
 db.comment = require("./comment.model.js")(sequelize, DataTypes);
 //export Curso model
@@ -51,7 +51,7 @@ db.project_comment = require("./project_comment.model.js")(sequelize, DataTypes)
 //export fav_userproject
 db.fav_userproject = require("./fav_userproject.model.js")(sequelize, DataTypes);
 //export fav_userproject
-db.fav_userannoucement = require("./fav_userannoucement.model.js")(sequelize, DataTypes);
+db.fav_userannouncement = require("./fav_userannouncement.model.js")(sequelize, DataTypes);
 //define relationships
 
 //users
@@ -60,8 +60,8 @@ db.fav_userannoucement = require("./fav_userannoucement.model.js")(sequelize, Da
 db.course.hasMany(db.user);
 db.user.belongsTo(db.course);
 //1:M
-db.user.hasMany(db.annoucement);
-db.annoucement.belongsTo(db.user);
+db.user.hasMany(db.announcement);
+db.announcement.belongsTo(db.user);
 //N:M
 db.user.belongsToMany(db.project, { through: 'UserProjects' });
 db.project.belongsToMany(db.user, { through: 'UserProjects' });
@@ -72,8 +72,8 @@ db.user_comment.belongsTo(db.user);
 db.user.hasMany(db.fav_userproject);
 db.fav_userproject.belongsTo(db.user);
 //1:M
-db.user.hasMany(db.fav_userannoucement);
-db.fav_userannoucement.belongsTo(db.user);
+db.user.hasMany(db.fav_userannouncement);
+db.fav_userannouncement.belongsTo(db.user);
 
 //projects
 //1:M

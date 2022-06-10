@@ -1,9 +1,9 @@
 const db = require("../models/index.js");
-const Annoucement = db.annoucement;
+const Announcement = db.announcement;
 
 //necessary for LIKE operator
 const { Op, ValidationError } = require('sequelize');
-const { annoucement } = require("../models/index.js");
+const { announcement } = require("../models/index.js");
 
 // function to map default response to desired response data structure
 // {
@@ -21,11 +21,11 @@ const getPagingData = (data, page, limit) => {
     //         ]
     // }
     const totalItems = data.count;
-    const annoucements = data.rows;
+    const announcements = data.rows;
     const currentPage = page;
     const totalPages = Math.ceil(totalItems / limit);
 
-    return { totalItems, annoucements, totalPages, currentPage };
+    return { totalItems, announcements, totalPages, currentPage };
 };
 
 // Display list of all users (with pagination)
@@ -51,7 +51,7 @@ exports.findAll = async (req, res) => {
     // Sequelize function findAndCountAll parameters: 
     //      limit -> number of rows to be retrieved
     //      offset -> number of rows to be offseted (not retrieved)
-    const limit = size ? size : 3;          // limit = size (default is 3)
+    const limit = size ? size : 6;          // limit = size (default is 3)
     const offset = page ? page * limit : 0; // offset = page * size (start counting from page 0)
     // console.log(`Limit ${limit} Offset ${offset}`)
 
@@ -59,20 +59,20 @@ exports.findAll = async (req, res) => {
     const condition = titulo ? { titulo: { [Op.like]: `%${titulo}%` } } : null;
 
     try {
-        let annoucements = await Annoucement.findAndCountAll({ where: condition, limit, offset })
+        let announcements = await Announcement.findAndCountAll({ where: condition, limit, offset })
         
         // map default response to desired response data structure
         res.status(200).json({
             success: true,
-            totalItems: annoucements.count,
-            annoucements: annoucements.rows,
-            totalPages: Math.ceil(annoucements.count / limit),
+            totalItems: announcements.count,
+            announcements: announcements.rows,
+            totalPages: Math.ceil(announcements.count / limit),
             currentPage: page ? page : 0
         });
     }
     catch (err) {
         res.status(500).json({
-            success: false, msg: err.message || "Some error occurred while retrieving the annoucement."
+            success: false, msg: err.message || "Some error occurred while retrieving the announcement."
         })
         
     }
@@ -80,18 +80,18 @@ exports.findAll = async (req, res) => {
 
 exports.findOne = async (req, res) => {
     try {
-        let annoucement = await Annoucement.findByPk(req.params.annoucementID)
+        let announcement = await Announcement.findByPk(req.params.announcementID)
 
-         if (annoucement === null)
+         if (announcement === null)
             res.status(404).json({
-                success: false, msg: `Cannot find any annoucement with ID ${req.params.annoucementID}.`
+                success: false, msg: `Cannot find any announcement with ID ${req.params.announcementID}.`
             });
         else
-            res.json({ success: true, annoucement: annoucement });
+            res.json({ success: true, announcement: announcement });
     }
     catch (err) {
         res.status(500).json({
-            success: false, msg: `Error retrieving annoucement with ID ${req.params.annoucementID}.`
+            success: false, msg: `Error retrieving announcement with ID ${req.params.announcementID}.`
         });
     };
 };
@@ -101,8 +101,19 @@ exports.create = async (req, res) => {
     // no need validation
 
     try {
-        let newAnnoucement = await Annoucement.create(req.body);
-        res.status(201).json({ success: true, msg:"New annoucement created", URL: `/annoucements/${newAnnoucement.id}` })
+
+        let announcement = await Announcement.create({
+            titulo: req.body.titulo,
+            descricao: req.body.descricao,
+            utilizadorId: req.body.utilizadorId,
+            img: req.body.img,
+            tipo: req.body.tipo,
+        })
+
+        console.log(announcement)
+
+
+        res.status(201).json({ success: true, msg:"New announcement created", URL: `/announcements/${announcement.id}` })
     }
     catch (err) {
         // console.log(err.name) // err.name === 'SequelizeValidationError'
@@ -110,7 +121,7 @@ exports.create = async (req, res) => {
             res.status(400).json({ success: false, msg: err.errors.map(e => e.message) });
         else
             res.status(500).json({
-                success: false, msg: err.message || "Some error occurred while creating the annoucement."
+                success: false, msg: err.message || "Some error occurred while creating the announcement."
             });
     };
 };
@@ -118,51 +129,51 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         // since Sequelize update() does not distinguish if a tutorial exists, first let's try to find one
-        let annoucement = await Annoucement.findByPk(req.params.annoucementID);
-        if (annoucement === null)
+        let announcement = await Announcement.findByPk(req.params.announcementID);
+        if (announcement === null)
             return res.status(404).json({
-                success: false, msg: `Cannot find any annoucement with ID ${req.params.annoucementID}.`
+                success: false, msg: `Cannot find any announcement with ID ${req.params.announcementID}.`
             });
             
         // obtains only a single entry from the table, using the provided primary key
-        let affectedRows = await Annoucement.update(req.body, { where: { id: req.params.annoucementID } })
+        let affectedRows = await Announcement.update(req.body, { where: { id: req.params.announcementID } })
 
         if (affectedRows[0] === 0) // check if the tutorial was updated (returns [0] if no data was updated)
             return res.status(200).json({
-                success: true, msg: `No updates were made on annoucement with ID ${req.params.annoucementID}.`
+                success: true, msg: `No updates were made on announcement with ID ${req.params.announcementID}.`
             });
 
         res.json({
             success: true,
-            msg: `Annoucement with ID ${req.params.annoucementID} was updated successfully.`
+            msg: `announcement with ID ${req.params.announcementID} was updated successfully.`
         });
     }
     catch (err) {
         if (err instanceof ValidationError)
             return res.status(400).json({ success: false, msg: err.errors.map(e => e.message) });
         res.status(500).json({
-            success: false, msg: `Error retrieving annoucement with ID ${req.params.annoucementID}.`
+            success: false, msg: `Error retrieving announcement with ID ${req.params.announcementID}.`
         });
     };
 };
 
 exports.delete = async (req, res) => {
     try {
-        let result = await Annoucement.destroy({ where: { id: req.params.annoucementID } })
+        let result = await Announcement.destroy({ where: { id: req.params.announcementID } })
         // console.log(result)
         if (result == 1) // the promise returns the number of deleted rows
             return res.status(200).json({
-                success: true, msg: `Annoucement with id ${req.params.annoucementID} was successfully deleted!`
+                success: true, msg: `announcement with id ${req.params.announcementID} was successfully deleted!`
             });
         // no rows deleted -> no tutorial was found
         res.status(404).json({
-            success: false, msg: `Cannot find any annoucement with ID ${req.params.annoucementID}.`
+            success: false, msg: `Cannot find any announcement with ID ${req.params.announcementID}.`
         });
     }
     catch (err) {
         console.log(err)
         res.status(500).json({
-            success: false, msg: `Error deleting annoucement with ID ${req.params.annoucementID}.`
+            success: false, msg: `Error deleting announcement with ID ${req.params.announcementID}.`
         });
     };
 };

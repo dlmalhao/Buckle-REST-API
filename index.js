@@ -21,7 +21,7 @@ app.use('/users', require('./routes/user.routes.js'))
 app.use('/projects', require('./routes/project.routes.js'))
 
 // routing middleware (mounted on /tutorials route)
-app.use('/annoucements', require('./routes/annoucement.routes.js'))
+app.use('/announcements', require('./routes/announcement.routes.js'))
 
 // routing middleware (mounted on /tutorials route)
 app.use('/comments', require('./routes/comment.routes.js'))
