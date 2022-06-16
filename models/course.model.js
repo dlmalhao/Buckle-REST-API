@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: { notNull: { msg: "Description can not be empty or null!" } }
+        },
+        value: {
+            type: DataTypes.STRING,
+            allowNull: true,
         }
     }, {
         timestamps: false

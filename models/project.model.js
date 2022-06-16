@@ -14,7 +14,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: { notNull: { msg: "Data can not be empty or null!" } }
-        }
+        },
+        utilizadorId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: { notNull: { msg: "User ID cannot be null!" } }
+        },
     }, {
         timestamps: false
     });

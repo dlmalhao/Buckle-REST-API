@@ -1,9 +1,12 @@
 const db = require("../models/index.js");
 const Comment = db.comment;
+const User = db.user;
 
 //necessary for LIKE operator
 const { Op, ValidationError } = require('sequelize');
-const { comment } = require("../models/index.js");
+// const { comment } = require("../models/index.js");
+
+let user;
 
 // function to map default response to desired response data structure
 // {
@@ -12,21 +15,21 @@ const { comment } = require("../models/index.js");
 //     "totalPages": 3,
 //     "currentPage": 1
 // }
-const getPagingData = (data, page, limit) => {
-    // data Sequelize Model method findAndCountAll function has the form
-    // {
-    //     count: 5,
-    //     rows: [
-    //              tutorial {...}
-    //         ]
-    // }
-    const totalItems = data.count;
-    const comments = data.rows;
-    const currentPage = page;
-    const totalPages = Math.ceil(totalItems / limit);
+// const getPagingData = (data, page, limit) => {
+//     // data Sequelize Model method findAndCountAll function has the form
+//     // {
+//     //     count: 5,
+//     //     rows: [
+//     //              tutorial {...}
+//     //         ]
+//     // }
+//     const totalItems = data.count;
+//     const comments = data.rows;
+//     const currentPage = page;
+//     const totalPages = Math.ceil(totalItems / limit);
 
-    return { totalItems, comments, totalPages, currentPage };
-};
+//     return { totalItems, comments, totalPages, currentPage };
+// };
 
 // Display list of all users (with pagination)
 exports.findAll = async (req, res) => {
@@ -51,7 +54,7 @@ exports.findAll = async (req, res) => {
     // Sequelize function findAndCountAll parameters: 
     //      limit -> number of rows to be retrieved
     //      offset -> number of rows to be offseted (not retrieved)
-    const limit = size ? size : 3;          // limit = size (default is 3)
+    // const limit = size ? size : 3;          // limit = size (default is 3)
     const offset = page ? page * limit : 0; // offset = page * size (start counting from page 0)
     // console.log(`Limit ${limit} Offset ${offset}`)
 
@@ -59,14 +62,13 @@ exports.findAll = async (req, res) => {
     const condition = desc ? { desc: { [Op.like]: `%${desc}%` } } : null;
 
     try {
-        let comments = await Comment.findAndCountAll({ where: condition, limit, offset })
+        let comments = await Comment.findAndCountAll({ where: condition, offset })
         
         // map default response to desired response data structure
         res.status(200).json({
             success: true,
             totalItems: comments.count,
             comments: comments.rows,
-            totalPages: Math.ceil(comments.count / limit),
             currentPage: page ? page : 0
         });
     }
@@ -96,12 +98,21 @@ exports.findOne = async (req, res) => {
     };
 };
 
-// Handle user create on POST
 exports.create = async (req, res) => {
-    // no need validation
+   let user = await User.findByPk(req.params.userID) 
+   if(user == null) {
+    return res.status(404).json({ success: false, msg:`Cannot find any user with ID ${req.params.userID}.`})
+   }
 
     try {
-        let newComment = await Comment.create(req.body);
+        let newComment = await Comment.create({
+            desc_comentario : req.body.desc_comentario,
+            rating : req.body.rating,
+            tipo_comentario: req.body.tipo_comentario,
+            id_quem_comentou : req.body.id_quem_comentou,
+            id_a_quem_comentou : req.body.id_a_quem_comentou
+
+        })
         res.status(201).json({ success: true, msg:"New comment created", URL: `/comments/${newComment.id}` })
     }
     catch (err) {

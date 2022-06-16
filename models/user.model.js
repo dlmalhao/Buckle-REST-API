@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             validate: { notNull: { msg: "Surname can not be empty or null!" } }
         },
-        password:{
+        password: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: { notNull: { msg: "Password can not be empty or null!" } }
@@ -23,8 +23,27 @@ module.exports = (sequelize, DataTypes) => {
         role: {
             type: DataTypes.STRING,
         },
-        img : {
+        img: {
             type: DataTypes.STRING,
+        },
+        bgImg: {
+            type: DataTypes.STRING
+        },
+        gender: {
+            type: DataTypes.ENUM("masculino", "feminino","outro"),
+            defaultValue: "masculino",
+            validate: {
+                isIn: {
+                    args: [["masculino", "feminino", "outro"]],
+                    msg: "Allowed genre: masculino, feminino ou outro",
+                },
+            },
+        },
+        date:{
+            type:DataTypes.DATEONLY
+        },
+        descricao:{ 
+           type: DataTypes.STRING
         }
     }, {
         timestamps: false

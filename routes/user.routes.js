@@ -2,6 +2,8 @@ const express = require('express');
 
 const userController = require("../controllers/user.controller");
 const authController = require("../controllers/Auth.controller");
+const commentsRouter = require("../routes/comment.routes");
+const chatRouter = require("../routes/chat.routes");
 
 
 // express router
@@ -26,6 +28,9 @@ router.route('/:userID')
     .get(/*authController.verifyToken,*/ userController.findOne)
     .put(authController.verifyToken, userController.update)
     .delete(authController.verifyToken, userController.delete);
+
+router.use('/:userID/comments', commentsRouter);
+router.use('/:userID/chats', chatRouter);
 
 router.all('*', function (req, res) {
     //send an predefined error message 

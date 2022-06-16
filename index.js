@@ -20,14 +20,33 @@ app.use('/users', require('./routes/user.routes.js'))
 // routing middleware (mounted on /projects route)
 app.use('/projects', require('./routes/project.routes.js'))
 
+// routing middleware (mounted on /projects route)
+app.use('/projectImages', require('./routes/projectImage.routes.js'))
+
 // routing middleware (mounted on /tutorials route)
 app.use('/announcements', require('./routes/announcement.routes.js'))
+
+// routing middleware (mounted on /tutorials route)
+app.use('/courses', require('./routes/course.routes.js'))
+
+// routing middleware (mounted on /tutorials route)
+app.use('/favsAnnouncement', require('./routes/favAnnouncement.routes.js'))
+
+// routing middleware (mounted on /tutorials route)
+app.use('/favsProject', require('./routes/favProject.routes.js'))
 
 // routing middleware (mounted on /tutorials route)
 app.use('/comments', require('./routes/comment.routes.js'))
 
 // routing middleware (mounted on /tutorials route)
 app.use('/auth', require('./routes/auth.routes.js'))
+
+// routing middleware (mounted on /users route)
+app.use('/chats', require('./routes/chat.routes'))
+
+// routing middleware (mounted on /chats route)
+app.use('/messages', require('./routes/messages.routes'))
+
 
 
 

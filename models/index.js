@@ -49,10 +49,16 @@ db.user_comment = require("./user_comment.model.js")(sequelize, DataTypes);
 // export project_comment
 db.project_comment = require("./project_comment.model.js")(sequelize, DataTypes);
 //export fav_userproject
-db.fav_userproject = require("./fav_userproject.model.js")(sequelize, DataTypes);
+db.favProject = require("./favProject.model.js")(sequelize, DataTypes);
 //export fav_userproject
-db.fav_userannouncement = require("./fav_userannouncement.model.js")(sequelize, DataTypes);
+db.favAnnouncement = require("./favAnnouncement.model.js")(sequelize, DataTypes);
 //define relationships
+db.projectImage = require("./projectImage.model.js")(sequelize, DataTypes);
+//export chat
+db.chat = require("./chat.model")(sequelize, DataTypes);
+//export messages
+db.message = require("./messages.model")(sequelize, DataTypes);
+
 
 //users
 
@@ -69,24 +75,32 @@ db.project.belongsToMany(db.user, { through: 'UserProjects' });
 db.user.hasMany(db.user_comment);
 db.user_comment.belongsTo(db.user);
 //1:M
-db.user.hasMany(db.fav_userproject);
-db.fav_userproject.belongsTo(db.user);
+db.user.hasMany(db.favProject);
+db.favProject.belongsTo(db.user);
 //1:M
-db.user.hasMany(db.fav_userannouncement);
-db.fav_userannouncement.belongsTo(db.user);
+db.user.hasMany(db.favAnnouncement);
+db.favAnnouncement.belongsTo(db.user);
 
 //projects
 //1:M
-db.project.hasMany(db.project_comment, {foreingKey: 'id_projeto'});
-db.project_comment.belongsTo(db.project, {foreingKey: 'id_projeto'});
+db.project.hasMany(db.project_comment, {foreignKey: 'id_projeto'});
+db.project_comment.belongsTo(db.project, {foreignKey: 'id_projeto'});
+
+//1:M
+db.project.hasMany(db.projectImage);
+db.projectImage.belongsTo(db.project);
 
 //comments
 //1:M
-db.comment.hasMany(db.user_comment, {foreingKey: 'id_comentario'});
-db.user_comment.belongsTo(db.comment, {foreingKey: 'id_comentario'});
+db.comment.hasMany(db.user_comment, {foreignKey: 'id_comentario'});
+db.user_comment.belongsTo(db.comment, {foreignKey: 'id_comentario'});
 //1:M
-db.comment.hasMany(db.project_comment, {foreingKey: 'id_comentario'});
-db.project_comment.belongsTo(db.comment, {foreingKey: 'id_comentario'});
+db.comment.hasMany(db.project_comment, {foreignKey: 'id_comentario'});
+db.project_comment.belongsTo(db.comment, {foreignKey: 'id_comentario'});
+
+//1:M
+db.chat.hasMany(db.message, {foreingKey: 'id_chat'});
+db.message.belongsTo(db.chat, {foreingKey: 'id_chat'});
 
 
 // optionally: SYNC

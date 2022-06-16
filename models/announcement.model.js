@@ -10,16 +10,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             validate: { notNull: { msg: "Description cannot be empty or null!" } }
         },
-        // curso: {
-        //     type: DataTypes.ENUM("tsiw", "tcav","design-grafico", "design-industrial", "fotografia", "multimedia"),
-        //     defaultValue: "tsiw",
-        //     validate: {
-        //         isIn: {
-        //             args: [["tsiw", "tcav","design-grafico", "design-industrial", "fotografia", "multimedia"]],
-        //             msg: "Allowed genre: tsiw, tcav, design-grafico, design-industrial, fotografia, multimedia",
-        //         },
-        //     },
-        // },
         utilizadorId: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -39,6 +29,11 @@ module.exports = (sequelize, DataTypes) => {
                     msg: "Announcement type cannot be null!"
                 }
             }
+        },
+        data:{
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: { notNull: { msg: "Data can not be empty or null!" } }
         }
     }, {
         timestamps: false

@@ -108,6 +108,7 @@ exports.create = async (req, res) => {
             utilizadorId: req.body.utilizadorId,
             img: req.body.img,
             tipo: req.body.tipo,
+            data: req.body.data
         })
 
         console.log(announcement)
