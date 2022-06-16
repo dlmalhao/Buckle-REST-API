@@ -23,21 +23,13 @@ exports.signup = async (req, res) => {
       nome: req.body.nome,
       sobrenome: req.body.sobrenome,
       role: "Student",
-      img: "https://imagens.mdig.com.br/thbs/45184mn.jpg",
+      gender :req.body.gender,
       courseId: course.id,
-    });
-    // if (req.body.user_type) {
-    //     let user_type = await UserType.findOne({ where: { type: req.body.user_type } });
-    //     if (user_type) {
-    //         if (user_type.type === "Admin") {
-    //             await User.update({ userTypeId: 1 }, { where: { id: user.id } })
-    //         } else if (user_type.type === "Association") {
-    //             await User.update({ userTypeId: 3 }, { where: { id: user.id } })
-    //         }
-    //     }
-    // }
-    // else
-    //     await User.update({ userTypeId: 2 }, { where: { id: user.id } })
+      img: "https://imagens.mdig.com.br/thbs/45184mn.jpg",
+      bgImg: "https://www.solidbackgrounds.com/images/2048x1536/2048x1536-powder-blue-web-solid-color-background.jpg",
+      descricao:"",
+      date:new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+(new Date().getDate())
+    })
     return res.json({
       success: true,
       message: "User was registered successfully!",
