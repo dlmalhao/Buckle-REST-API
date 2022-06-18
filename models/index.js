@@ -40,6 +40,8 @@ db.user = require("./user.model.js")(sequelize, DataTypes);
 db.project = require("./project.model.js")(sequelize, DataTypes);
 //export announcement model
 db.announcement = require("./announcement.model")(sequelize, DataTypes);
+//export announcement model
+db.ae = require("./ae.model")(sequelize, DataTypes);
 //export Comment model
 db.comment = require("./comment.model.js")(sequelize, DataTypes);
 //export Comment model
@@ -70,6 +72,9 @@ db.user.belongsTo(db.course);
 //1:M
 db.user.hasMany(db.announcement);
 db.announcement.belongsTo(db.user);
+//1:M
+db.user.hasMany(db.ae);
+db.ae.belongsTo(db.user);
 //N:M
 db.user.belongsToMany(db.project, { through: 'UserProjects' });
 db.project.belongsToMany(db.user, { through: 'UserProjects' });
@@ -108,6 +113,7 @@ db.project_comment.belongsTo(db.comment, {foreignKey: 'id_comentario'});
 //1:M
 db.chat.hasMany(db.message, {foreingKey: 'id_chat'});
 db.message.belongsTo(db.chat, {foreingKey: 'id_chat'});
+
 
 
 // optionally: SYNC

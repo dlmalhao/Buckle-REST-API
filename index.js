@@ -27,6 +27,9 @@ app.use('/projectImages', require('./routes/projectImage.routes.js'))
 app.use('/announcements', require('./routes/announcement.routes.js'))
 
 // routing middleware (mounted on /tutorials route)
+app.use('/aeAnnouncements', require('./routes/ae.routes.js'))
+
+// routing middleware (mounted on /tutorials route)
 app.use('/courses', require('./routes/course.routes.js'))
 
 // routing middleware (mounted on /tutorials route)

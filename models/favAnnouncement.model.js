@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const FavAnnouncement = sequelize.define("favAnnouncement", {
-        id_utilizador_recebido: {
+        adID: {
             type: DataTypes.INTEGER,
             allowNull: false,
             validate: { notNull: { msg: "id_utilizador_recebido can not be empty or null!" } }
