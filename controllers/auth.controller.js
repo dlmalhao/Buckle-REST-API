@@ -23,6 +23,7 @@ exports.signup = async (req, res) => {
       nome: req.body.nome,
       sobrenome: req.body.sobrenome,
       role: "Student",
+      status: "active",
       gender :req.body.gender,
       courseId: course.id,
       img: "https://imagens.mdig.com.br/thbs/45184mn.jpg",

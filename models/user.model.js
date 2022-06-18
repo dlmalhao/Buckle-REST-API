@@ -44,7 +44,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         descricao:{ 
            type: DataTypes.STRING
-        }
+        },
+        status:{ 
+            type: DataTypes.STRING
+         },
     }, {
         timestamps: false
     });

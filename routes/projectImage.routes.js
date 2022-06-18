@@ -20,7 +20,7 @@ router.route('/')
     .get(projectImageController.findAll)
     .post(projectImageController.create);
 
-router.route('/:projectImageControllerID')
+router.route('/:projectImageID')
     .get(projectImageController.findOne)
     .put(projectImageController.update)
     .delete(projectImageController.delete);

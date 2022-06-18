@@ -50,8 +50,7 @@ exports.findAll = async (req, res) => {
 
     // Sequelize function findAndCountAll parameters: 
     //      limit -> number of rows to be retrieved
-    //      offset -> number of rows to be offseted (not retrieved)
-    const limit = size ? size : 6;          // limit = size (default is 3)
+    //      offset -> number of rows to be offseted (not retrieved)         // limit = size (default is 3)
     const offset = page ? page * limit : 0; // offset = page * size (start counting from page 0)
     // console.log(`Limit ${limit} Offset ${offset}`)
 
@@ -59,14 +58,13 @@ exports.findAll = async (req, res) => {
     const condition = titulo ? { titulo: { [Op.like]: `%${titulo}%` } } : null;
 
     try {
-        let announcements = await Announcement.findAndCountAll({ where: condition, limit, offset })
+        let announcements = await Announcement.findAndCountAll({ where: condition, offset })
         
         // map default response to desired response data structure
         res.status(200).json({
             success: true,
             totalItems: announcements.count,
             announcements: announcements.rows,
-            totalPages: Math.ceil(announcements.count / limit),
             currentPage: page ? page : 0
         });
     }

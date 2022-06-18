@@ -42,6 +42,8 @@ db.project = require("./project.model.js")(sequelize, DataTypes);
 db.announcement = require("./announcement.model")(sequelize, DataTypes);
 //export Comment model
 db.comment = require("./comment.model.js")(sequelize, DataTypes);
+//export Comment model
+db.commentProject = require("./commentProject.model")(sequelize, DataTypes);
 //export Curso model
 db.course = require("./course.model.js")(sequelize, DataTypes);
 //export User_comment model
@@ -85,6 +87,11 @@ db.favAnnouncement.belongsTo(db.user);
 //1:M
 db.project.hasMany(db.project_comment, {foreignKey: 'id_projeto'});
 db.project_comment.belongsTo(db.project, {foreignKey: 'id_projeto'});
+
+//comments Projetos
+//1:M
+db.commentProject.hasMany(db.project, {foreignKey: 'utilizadorId'});
+db.project.belongsTo(db.commentProject, {foreignKey: 'utilizadorId'});
 
 //1:M
 db.project.hasMany(db.projectImage);

@@ -104,7 +104,8 @@ exports.create = async (req, res) => {
             nome: req.body.nome,
             sobrenome: req.body.sobrenome,
             password: bcrypt.hashSync(req.body.password, 10),
-            role :"Student",
+            role :"Admin",
+            status :"active"
         });
         res.status(201).json({ success: true, msg: "New user created.", URL: `/users
         /${newUser.id}` });
@@ -185,6 +186,7 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
+       
         let result = await User.destroy({ where: { id: req.params.userID } })
         // console.log(result)
         if (result == 1) // the promise returns the number of deleted rows

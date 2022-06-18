@@ -100,7 +100,7 @@ exports.create = async (req, res) => {
 
     try {
         let newFavAnnouncement = await FavAnnouncement.create({
-            id_utilizador_recebido: req.body.id_utilizador_recebido,
+            adID: req.body.adID,
             id_utilizador_dado: req.body.id_utilizador_dado,
         })
         res.status(201).json({ success: true, msg:"New favAnnouncement created", URL: `/favAnnouncements/${newFavAnnouncement.id}` })

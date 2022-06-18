@@ -1,6 +1,7 @@
 const express = require('express');
 
 const projectController = require("../controllers/project.controller");
+const commentsProjectRouter = require("../routes/commentsProject.routes");
 
 // express router
 let router = express.Router();
@@ -24,6 +25,8 @@ router.route('/:projectID')
     .get(projectController.findOne)
     .put(projectController.update)
     .delete(projectController.delete);
+
+router.use('/:projectID/commentsProject', commentsProjectRouter);
 
 router.all('*', function (req, res) {
     //send an predefined error message 

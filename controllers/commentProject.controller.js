@@ -1,9 +1,12 @@
 const db = require("../models/index.js");
-const FavProject = db.favProject;
+const CommentProject = db.commentProject;
+const Project = db.project;
 
 //necessary for LIKE operator
 const { Op, ValidationError } = require('sequelize');
-const { favProject } = require("../models/index.js");
+// const { comment } = require("../models/index.js");
+
+let project;
 
 // function to map default response to desired response data structure
 // {
@@ -12,21 +15,21 @@ const { favProject } = require("../models/index.js");
 //     "totalPages": 3,
 //     "currentPage": 1
 // }
-const getPagingData = (data, page, limit) => {
-    // data Sequelize Model method findAndCountAll function has the form
-    // {
-    //     count: 5,
-    //     rows: [
-    //              tutorial {...}
-    //         ]
-    // }
-    const totalItems = data.count;
-    const favProjects = data.rows;
-    const currentPage = page;
-    const totalPages = Math.ceil(totalItems / limit);
+// const getPagingData = (data, page, limit) => {
+//     // data Sequelize Model method findAndCountAll function has the form
+//     // {
+//     //     count: 5,
+//     //     rows: [
+//     //              tutorial {...}
+//     //         ]
+//     // }
+//     const totalItems = data.count;
+//     const comments = data.rows;
+//     const currentPage = page;
+//     const totalPages = Math.ceil(totalItems / limit);
 
-    return { totalItems, favProjects, totalPages, currentPage };
-};
+//     return { totalItems, comments, totalPages, currentPage };
+// };
 
 // Display list of all users (with pagination)
 exports.findAll = async (req, res) => {
@@ -50,7 +53,8 @@ exports.findAll = async (req, res) => {
 
     // Sequelize function findAndCountAll parameters: 
     //      limit -> number of rows to be retrieved
-    //      offset -> number of rows to be offseted (not retrieved)// limit = size (default is 3)
+    //      offset -> number of rows to be offseted (not retrieved)
+    // const limit = size ? size : 3;          // limit = size (default is 3)
     const offset = page ? page * limit : 0; // offset = page * size (start counting from page 0)
     // console.log(`Limit ${limit} Offset ${offset}`)
 
@@ -58,19 +62,19 @@ exports.findAll = async (req, res) => {
     const condition = desc ? { desc: { [Op.like]: `%${desc}%` } } : null;
 
     try {
-        let favProjects = await FavProject.findAndCountAll({ where: condition, offset })
+        let commentsProject = await CommentProject.findAndCountAll({ where: condition, offset })
         
         // map default response to desired response data structure
         res.status(200).json({
             success: true,
-            totalItems: favProjects.count,
-            favProjects: favProjects.rows,
+            totalItems: commentsProject.count,
+            commentsProject: commentsProject.rows,
             currentPage: page ? page : 0
         });
     }
     catch (err) {
         res.status(500).json({
-            success: false, msg: err.message || "Some error occurred while retrieving the FavProject."
+            success: false, msg: err.message || "Some error occurred while retrieving the Comment."
         })
         
     }
@@ -78,40 +82,44 @@ exports.findAll = async (req, res) => {
 
 exports.findOne = async (req, res) => {
     try {
-        let favProject = await FavProject.findByPk(req.params.favProjectID)
+        let commentProject = await CommentProject.findByPk(req.params.commentProjectID)
 
-         if (favProject === null)
+         if (commentProject === null)
             res.status(404).json({
-                success: false, msg: `Cannot find any favProject with ID ${req.params.favProjectID}.`
+                success: false, msg: `Cannot find any comment with ID ${req.params.commentProjectID}.`
             });
         else
-            res.json({ success: true, favProject: favProject });
+            res.json({ success: true, commentProject: commentProject });
     }
     catch (err) {
         res.status(500).json({
-            success: false, msg: `Error retrieving favProject with ID ${req.params.favProjectID}.`
+            success: false, msg: `Error retrieving comment with ID ${req.params.commentProjectID}.`
         });
     };
 };
 
-// Handle user create on POST
 exports.create = async (req, res) => {
-    // no need validation
+   let project = await Project.findByPk(req.params.projectID); 
+   if(project == null) {
+    return res.status(404).json({ success: false, msg:`Cannot find any project with ID ${req.params.projectID}.`})
+   }
 
     try {
-        let newFavProject = await FavProject.create({
-            projectID: req.body.projectID,
-            id_utilizador_dado: req.body.id_utilizador_dado,
+        let newCommentProject = await CommentProject.create({
+            desc_comentario : req.body.desc_comentario,
+            id_quem_comentou : req.body.id_quem_comentou,
+            id_projeto : req.body.id_projeto
+
         })
-        res.status(201).json({ success: true, msg:"New favProject created", URL: `/favProjects/${newFavProject.id}` })
+        res.status(201).json({ success: true, msg:"New comment created", URL: `/comments/${newCommentProject.id}` })
     }
     catch (err) {
-        // console.log(err.name) // err.name === 'Seque  lizeValidationError'
+        // console.log(err.name) // err.name === 'SequelizeValidationError'
         if (err instanceof ValidationError)
             res.status(400).json({ success: false, msg: err.errors.map(e => e.message) });
         else
             res.status(500).json({
-                success: false, msg: err.message || "Some error occurred while creating the favProject."
+                success: false, msg: err.message || "Some error occurred while creating the comment."
             });
     };
 };
@@ -119,51 +127,51 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         // since Sequelize update() does not distinguish if a tutorial exists, first let's try to find one
-        let favProject = await FavProject.findByPk(req.params.favProjectID);
-        if (favProject === null)
+        let commentProject = await CommentProject.findByPk(req.params.commentProjectID);
+        if (commentProject === null)
             return res.status(404).json({
-                success: false, msg: `Cannot find any favProject with ID ${req.params.favProjectID}.`
+                success: false, msg: `Cannot find any comment with ID ${req.params.commentProjectID}.`
             });
             
         // obtains only a single entry from the table, using the provided primary key
-        let affectedRows = await FavProject.update(req.body, { where: { id: req.params.favProjectID } })
+        let affectedRows = await CommentProject.update(req.body, { where: { id: req.params.commentProjectID } })
 
         if (affectedRows[0] === 0) // check if the tutorial was updated (returns [0] if no data was updated)
             return res.status(200).json({
-                success: true, msg: `No updates were made on favProject with ID ${req.params.favProjectID}.`
+                success: true, msg: `No updates were made on comment with ID ${req.params.commentProjectID}.`
             });
 
         res.json({
             success: true,
-            msg: `FavProject with ID ${req.params.favProjectID} was updated successfully.`
+            msg: `Comment with ID ${req.params.commentProjectID} was updated successfully.`
         });
     }
     catch (err) {
         if (err instanceof ValidationError)
             return res.status(400).json({ success: false, msg: err.errors.map(e => e.message) });
         res.status(500).json({
-            success: false, msg: `Error retrieving favProject with ID ${req.params.favProjectID}.`
+            success: false, msg: `Error retrieving comment with ID ${req.params.commentProjectID}.`
         });
     };
 };
 
 exports.delete = async (req, res) => {
     try {
-        let result = await FavProject.destroy({ where: { id: req.params.favProjectID } })
+        let result = await CommentProject.destroy({ where: { id: req.params.commentProjectID } })
         // console.log(result)
         if (result == 1) // the promise returns the number of deleted rows
             return res.status(200).json({
-                success: true, msg: `FavProject with id ${req.params.favProjectID} was successfully deleted!`
+                success: true, msg: `Comment with id ${req.params.commentProjectID} was successfully deleted!`
             });
         // no rows deleted -> no tutorial was found
         res.status(404).json({
-            success: false, msg: `Cannot find any favProject with ID ${req.params.favProjectID}.`
+            success: false, msg: `Cannot find any comment with ID ${req.params.commentProjectID}.`
         });
     }
     catch (err) {
         console.log(err)
         res.status(500).json({
-            success: false, msg: `Error deleting favProject with ID ${req.params.favProjectID}.`
+            success: false, msg: `Error deleting comment with ID ${req.params.commentProjectID}.`
         });
     };
 };

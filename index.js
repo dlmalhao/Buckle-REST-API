@@ -39,6 +39,9 @@ app.use('/favsProject', require('./routes/favProject.routes.js'))
 app.use('/comments', require('./routes/comment.routes.js'))
 
 // routing middleware (mounted on /tutorials route)
+app.use('/commentsProject', require('./routes/commentsProject.routes'))
+
+// routing middleware (mounted on /tutorials route)
 app.use('/auth', require('./routes/auth.routes.js'))
 
 // routing middleware (mounted on /users route)
