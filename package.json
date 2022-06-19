@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "Teresa Terroso",
   "license": "ISC",
@@ -23,7 +22,7 @@
     "sequelize": "^6.19.0"
   },
   "engines": {
-    "node": "16.13.1",
+    "node": "16.x",
     "npm": "8.1.2"
   }
 }
