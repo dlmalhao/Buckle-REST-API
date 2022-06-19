@@ -60,4 +60,4 @@ app.use('/messages', require('./routes/messages.routes'))
 app.get('*', function (req, res) {
 	res.status(404).json({ message: 'WHAT???' });
 })
-app.listen(port, host, () => console.log(`App listening at http://${host}:${port}/`));
+app.listen(process.env.PORT || 3000, () => console.log(`App listening at http://${host}:${port}/`));

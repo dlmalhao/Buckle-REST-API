@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Teresa Terroso",
@@ -19,5 +20,9 @@
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.16",
     "sequelize": "^6.19.0"
-  }
+  },
+  "engines": {
+    "node": "16.13.1",
+    "npm": "8.1.2"
+    }
 }
