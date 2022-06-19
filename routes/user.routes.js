@@ -1,7 +1,7 @@
 const express = require('express');
 
 const userController = require("../controllers/user.controller");
-const authController = require("../controllers/Auth.controller");
+const authController = require("../controllers/auth.controller");
 const commentsRouter = require("../routes/comment.routes");
 const chatRouter = require("../routes/chat.routes");
 
